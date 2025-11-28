@@ -51,7 +51,7 @@ select_font() {
             --border \
             --exact \
             --prompt="Select a Nerd Font to install: " \
-            --header="Font Name                  Version     Description" \
+            --header="Font Name                  Version     Description"
 }
 
 extract_font_name() {

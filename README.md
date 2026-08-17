@@ -1,30 +1,37 @@
 # Nerd Font Installer
 
-An interactive bash script to browse and install Nerd Fonts using fzf.
+A bash script to search, preview, and install [Nerd Fonts](https://github.com/ryanoasis/nerd-fonts).
 
 ## Features
 
-- Browse all available Nerd Fonts with descriptions
-- View font version information
-- Interactive selection with fzf
-- Automatic download and installation
-- Installs to the appropriate system font directory
-- Updates font cache
+- **Interactive Search**: Search the Nerd Fonts catalog with `fzf`.
+- **Details Preview**: View font versions, license data, and descriptions before download.
+- **Batch Selection**: Select multiple fonts with `Tab` to install them in one pass.
+- **Direct CLI Mode**: Pass font names as arguments for dotfiles and scripts.
+- **Catalog List**: Print all available fonts and versions with `--list`.
+- **System Detection**: Installs fonts to standard user font folders on macOS and Linux.
+- **Cache Refresh**: Updates fontconfig cache after installation.
+- **Clean Teardown**: Removes temporary download files on completion or exit.
 
 ## Requirements
 
-The script requires the following tools to be installed:
+Install these command-line tools:
 
-- `fzf` - Fuzzy finder for interactive selection
-- `curl` - For downloading fonts
-- `jq` - For parsing JSON data
-- `unzip` - For extracting font archives
+- `curl` - Download fonts and catalog data
+- `jq` - Parse font metadata
+- `unzip` - Extract font archives
+- `fzf` - Interactive fuzzy search (optional for direct CLI mode)
 
-### Installing Dependencies
+### Install Dependencies
 
-**Ubuntu/Debian:**
+**macOS (Homebrew):**
 ```bash
-sudo apt install fzf curl jq unzip
+brew install fzf curl jq unzip
+```
+
+**Ubuntu / Debian:**
+```bash
+sudo apt update && sudo apt install fzf curl jq unzip
 ```
 
 **Fedora:**
@@ -37,38 +44,78 @@ sudo dnf install fzf curl jq unzip
 sudo pacman -S fzf curl jq unzip
 ```
 
-**macOS:**
-```bash
-brew install fzf curl jq unzip
-```
-
 ## Usage
 
-Simply run the script:
+### Interactive Mode
+
+Run the script without arguments:
 
 ```bash
 ./install-nerd-font.sh
 ```
 
-The script will:
-1. Fetch the latest list of available Nerd Fonts
-2. Display an interactive list with font names, versions, and descriptions
-3. Allow you to select a font using fzf
-4. Download and install the selected font
-5. Update the font cache
+| Key | Action |
+| --- | --- |
+| `Type` | Search fonts |
+| `Up` / `Down` or `Ctrl-k` / `Ctrl-j` | Move selection |
+| `Tab` / `Shift-Tab` | Select or deselect multiple fonts |
+| `Enter` | Install selected font(s) |
+| `Esc` / `Ctrl-c` | Cancel |
 
-### Navigation in fzf
+---
 
-- Type to search/filter fonts
-- Use arrow keys or `Ctrl-j`/`Ctrl-k` to navigate
-- Press `Enter` to select a font
-- Press `Esc` or `Ctrl-c` to cancel
+### Command-Line Mode
 
-## Installation Locations
+Install fonts directly by name:
 
-- **Linux:** `~/.local/share/fonts`
+```bash
+# Install a single font
+./install-nerd-font.sh Hack
+
+# Install multiple fonts
+./install-nerd-font.sh Hack "JetBrains Mono" CascadiaCode FiraCode
+```
+
+Font names are case-insensitive. You can pass patched names, package names, or original family names.
+
+---
+
+### List Fonts
+
+Print all available fonts:
+
+```bash
+./install-nerd-font.sh --list
+```
+
+---
+
+### Custom Target Directory
+
+Specify an install path with `-d` or the `FONT_DIR` variable:
+
+```bash
+# With command line option
+./install-nerd-font.sh -d ~/.local/share/custom-fonts Hack
+
+# With environment variable
+FONT_DIR=/opt/custom/fonts ./install-nerd-font.sh
+```
+
+## Target Directories
+
 - **macOS:** `~/Library/Fonts`
+- **Linux:** `${XDG_DATA_HOME:-$HOME/.local/share}/fonts`
+
+## Options
+
+```
+OPTIONS:
+    -h, --help          Show help message and exit
+    -l, --list          List all available Nerd Fonts with versions and descriptions
+    -d, --dir DIR       Specify custom font installation directory (overrides FONT_DIR)
+```
 
 ## License
 
-This script is provided as-is. The Nerd Fonts themselves are licensed under their respective licenses. See the [Nerd Fonts repository](https://github.com/ryanoasis/nerd-fonts) for more information.
+This project uses the MIT License. Upstream font licenses apply to individual font files. See the [Nerd Fonts repository](https://github.com/ryanoasis/nerd-fonts) for details.
